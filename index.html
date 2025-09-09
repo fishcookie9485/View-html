@@ -43,6 +43,12 @@
       color: #00aff4;
       word-break: break-all;
     }
+    .referenced-message {
+      border-left: 2px solid #ff0000;
+      padding-left: 10px;
+      margin-top: 5px;
+      color: #ff7777;
+    }
   </style>
 </head>
 <body>
@@ -80,17 +86,36 @@
               `).join('')}
             </div>
           ` : ''}
-          ${msg.reference ? `
-            <div class="embed">
-              <strong>Replied to:</strong>
-              <p>Message ID: ${msg.reference.messageId}</p>
+          ${msg.referencedContent ? `
+            <div class="referenced-message">
+              <strong>Referenced Message:</strong>
+              <p><span class="author">${msg.referencedContent.author}:</span> ${msg.referencedContent.content}</p>
+              ${msg.referencedContent.embeds && msg.referencedContent.embeds.length > 0 ? `
+                <div class="embed">
+                  <strong>Embeds:</strong>
+                  ${msg.referencedContent.embeds.map(embed => `
+                    <div>
+                      <strong>${embed.title || 'No title'}</strong>
+                      <p>${embed.description || 'No description'}</p>
+                    </div>
+                  `).join('')}
+                </div>
+              ` : ''}
+              ${msg.referencedContent.attachments && msg.referencedContent.attachments.length > 0 ? `
+                <div class="attachment">
+                  <strong>Attachments:</strong>
+                  ${msg.referencedContent.attachments.map(attachment => `
+                    <div><a href="${attachment}" target="_blank">${attachment}</a></div>
+                  `).join('')}
+                </div>
+              ` : ''}
             </div>
           ` : ''}
         </div>
       `).join('');
     }
 
-    setInterval(fetchMessages, 5000); // Refresh every 5 seconds, you impatient fuck
+    setInterval(fetchMessages, 5000);
     fetchMessages();
   </script>
 </body>

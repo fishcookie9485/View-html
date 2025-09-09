@@ -72,6 +72,31 @@
               <strong>Embeds:</strong>
               ${msg.embeds.map(embed => `
                 <div>
+                  ${embed.originalContent ? `
+                    <div class="referenced-message">
+                      <strong>Forwarded Message:</strong>
+                      <p><span class="author">${embed.originalContent.author}:</span> ${embed.originalContent.content}</p>
+                      ${embed.originalContent.embeds && embed.originalContent.embeds.length > 0 ? `
+                        <div class="embed">
+                          <strong>Embeds:</strong>
+                          ${embed.originalContent.embeds.map(e => `
+                            <div>
+                              <strong>${e.title || 'No title'}</strong>
+                              <p>${e.description || 'No description'}</p>
+                            </div>
+                          `).join('')}
+                        </div>
+                      ` : ''}
+                      ${embed.originalContent.attachments && embed.originalContent.attachments.length > 0 ? `
+                        <div class="attachment">
+                          <strong>Attachments:</strong>
+                          ${embed.originalContent.attachments.map(attachment => `
+                            <div><a href="${attachment}" target="_blank">${attachment}</a></div>
+                          `).join('')}
+                        </div>
+                      ` : ''}
+                    </div>
+                  ` : ''}
                   <strong>${embed.title || 'No title'}</strong>
                   <p>${embed.description || 'No description'}</p>
                 </div>
@@ -98,14 +123,6 @@
                       <strong>${embed.title || 'No title'}</strong>
                       <p>${embed.description || 'No description'}</p>
                     </div>
-                  `).join('')}
-                </div>
-              ` : ''}
-              ${msg.referencedContent.attachments && msg.referencedContent.attachments.length > 0 ? `
-                <div class="attachment">
-                  <strong>Attachments:</strong>
-                  ${msg.referencedContent.attachments.map(attachment => `
-                    <div><a href="${attachment}" target="_blank">${attachment}</a></div>
                   `).join('')}
                 </div>
               ` : ''}
